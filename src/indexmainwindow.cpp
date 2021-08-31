@@ -149,10 +149,13 @@ void IndexMainWindow::init_signals_and_slots()
 {
     switch (m_stackwidget_area->currentIndex()) {
     case int(CUR_WIDGET::WIDGET_EDITOR):
+        disconnect(m_view_data_table, SIGNAL(current_clicked_index(QString)), this, SLOT(update_bottom_edit_writable(QString)));
         connect(m_view_ciation_editor, SIGNAL(select_edit_changed(QString)), this, SLOT(update_bottom_edit_readonly(QString)));
         break;
-    case int(CUR_WIDGET::WIDGET_ORIGIN):
+    case int(CUR_WIDGET::WIDGET_TABLE):
+        qDebug() << "connect writable";
         disconnect(m_view_ciation_editor, SIGNAL(select_edit_changed(QString)), this, SLOT(update_bottom_edit_readonly(QString)));
+        connect(m_view_data_table, SIGNAL(current_clicked_index(QString)), this, SLOT(update_bottom_edit_writable(QString)));
         break;
     }
 }
@@ -197,6 +200,7 @@ void IndexMainWindow::on_action_indexing_triggered()
     ui->action_check_local->setVisible(true);
     ui->toolBar_combobox_area->hide();
     m_plaintextedit_bottom->setReadOnly(true);
+    init_signals_and_slots();
 }
 
 void IndexMainWindow::on_action_check_local_triggered()
@@ -206,6 +210,7 @@ void IndexMainWindow::on_action_check_local_triggered()
     ui->action_check_local->setVisible(false);
     ui->toolBar_combobox_area->show();
     m_plaintextedit_bottom->setReadOnly(false);
+    init_signals_and_slots();
 }
 
 void IndexMainWindow::on_action_check_local_with_update_triggered()
@@ -215,13 +220,23 @@ void IndexMainWindow::on_action_check_local_with_update_triggered()
     ui->action_check_local->setVisible(false);
     ui->toolBar_combobox_area->show();
     m_plaintextedit_bottom->setReadOnly(false);
+    init_signals_and_slots();
     //刷新数据库流程
 }
 
 void IndexMainWindow::on_action_show_bottom_view_triggered()
 {
-    QString test = QString::fromUtf8(u8"第1行");
-    m_view_ciation_editor->add_one_line(test, test, 10);
+    if (!m_db_module->out_db_open(QString::fromUtf8(u8"D:\\work\\613304\\20210812\\132732200025725789\\13\\3370\\20232\\upload\\20232.db"))) {
+        show_message(m_db_module->error());
+        return;
+    }
+    QMap<QString, QMap<QString, QVariant>> temp_map;
+    if (!m_db_module->out_db_table_result_read(m_table_result)) {
+        show_message(m_db_module->error());
+        return;
+    }
+    m_view_data_table->set_cur_data(m_table_result);
+    m_db_module->out_db_close();
 }
 
 void IndexMainWindow::on_action_show_original_data_triggered()
@@ -256,7 +271,8 @@ void IndexMainWindow::on_action_get_new_task_triggered()
 
 void IndexMainWindow::on_action_finish_local_triggered()
 {
-    m_view_ciation_editor->clear_widgets();
+    QMap<QString, QVariant> temp;
+    m_view_data_table->insert_one_line(temp, 25);
 }
 
 void IndexMainWindow::update_bottom_edit_readonly(QString code)
@@ -268,4 +284,16 @@ void IndexMainWindow::update_bottom_edit_readonly(QString code)
             break;
         }
     }
+}
+
+void IndexMainWindow::update_bottom_edit_writable(QString origin_ciation)
+{
+    qDebug() << "origin:" << origin_ciation;
+    m_plaintextedit_bottom->setPlainText(origin_ciation);
+}
+
+void IndexMainWindow::on_action_auto_indexing_triggered()
+{
+    QMap<QString, QVariant> temp;
+    m_view_data_table->insert_one_line(temp, 2);
 }

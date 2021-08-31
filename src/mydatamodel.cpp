@@ -11,7 +11,7 @@ MyDataModel::MyDataModel(QObject *parent) : QAbstractItemModel(parent)
     m_table_header << QString::fromUtf8(u8"到岗时间");
     m_table_header << QString::fromUtf8(u8"开始时间");
     m_table_header << QString::fromUtf8(u8"质检批次");
-    m_table_header << QString::fromUtf8(u8"标引引文");
+    m_table_header << QString::fromUtf8(u8"标记引文");
     m_table_header << QString::fromUtf8(u8"标记总数");
     m_table_header << QString::fromUtf8(u8"作者");
     m_table_header << QString::fromUtf8(u8"文献题名");
@@ -23,6 +23,7 @@ MyDataModel::MyDataModel(QObject *parent) : QAbstractItemModel(parent)
     m_table_header << QString::fromUtf8(u8"母体出版_期");
     m_table_header << QString::fromUtf8(u8"母体出版_页");
     m_table_header << QString::fromUtf8(u8"版次说明");
+    m_table_header << QString::fromUtf8(u8"母体出版地");
     m_table_header << QString::fromUtf8(u8"母体出版社");
     m_table_header << QString::fromUtf8(u8"会议地点");
     m_table_header << QString::fromUtf8(u8"主编");
@@ -31,7 +32,7 @@ MyDataModel::MyDataModel(QObject *parent) : QAbstractItemModel(parent)
     m_table_header << QString::fromUtf8(u8"责任方式");
     m_table_header << QString::fromUtf8(u8"语种");
     m_table_header << QString::fromUtf8(u8"电子版");
-    m_table_header << QString::fromUtf8(u8"其他");
+    m_table_header << QString::fromUtf8(u8"其它");
     m_table_header << QString::fromUtf8(u8"不做");
     m_table_header << QString::fromUtf8(u8"不会");
     m_table_header << QString::fromUtf8(u8"语言转换");
@@ -134,6 +135,7 @@ QVariant MyDataModel::headerData(int section, Qt::Orientation orientation, int r
 
 bool MyDataModel::insertRows(int row, int count, const QModelIndex& parent)
 {
+    beginInsertRows(parent, row, row);
     for (int i = 0; i < count; ++i) {
         QVector<QVariant> temp;
         for (int j = 0; j < m_table_header.size(); ++j) {
@@ -141,6 +143,7 @@ bool MyDataModel::insertRows(int row, int count, const QModelIndex& parent)
         }
         m_data.insert(row + i, temp);
     }
+    endInsertRows();
     return true;
 }
 

@@ -50,6 +50,9 @@ private slots:
 
     void on_action_finish_local_triggered();
     void update_bottom_edit_readonly(QString code);
+    void update_bottom_edit_writable(QString origin_ciation);
+
+    void on_action_auto_indexing_triggered();
 
 private:
     bool eventFilter(QObject* target, QEvent* e) override;

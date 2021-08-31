@@ -7,6 +7,8 @@
 
 class MyDataModel : public QAbstractItemModel
 {
+    Q_OBJECT
+public:
     enum class COL_NAME {
         TASK_CODE = 0,
         POST_NAME,
@@ -30,6 +32,7 @@ class MyDataModel : public QAbstractItemModel
         EDITION_DESCRIPTION,
         MOTHER_LOCATION,
         MOTHER_PRESS,
+        MEETING_LOCATION,
         CHIEF_EDITOR,
         CONFER_UNIT,
         PUBLISH_STATE,
@@ -51,9 +54,7 @@ class MyDataModel : public QAbstractItemModel
         WORK_PATH,
     };
 
-    Q_OBJECT
-public:
-    explicit MyDataModel(QObject *parent = nullptr);
+    explicit MyDataModel(QObject* parent = nullptr);
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex& index) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
