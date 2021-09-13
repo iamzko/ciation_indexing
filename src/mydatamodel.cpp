@@ -1,50 +1,51 @@
 ﻿#include "mydatamodel.h"
+#include "myglobal.h"
 #include <QDebug>
 
 MyDataModel::MyDataModel(QObject *parent) : QAbstractItemModel(parent)
 {
-    m_table_header << QString::fromUtf8(u8"编号");
-    m_table_header << QString::fromUtf8(u8"岗位名称");
-    m_table_header << QString::fromUtf8(u8"任务性质");
-    m_table_header << QString::fromUtf8(u8"文章编号");
-    m_table_header << QString::fromUtf8(u8"引文编号");
-    m_table_header << QString::fromUtf8(u8"到岗时间");
-    m_table_header << QString::fromUtf8(u8"开始时间");
-    m_table_header << QString::fromUtf8(u8"质检批次");
-    m_table_header << QString::fromUtf8(u8"标记引文");
-    m_table_header << QString::fromUtf8(u8"标记总数");
-    m_table_header << QString::fromUtf8(u8"作者");
-    m_table_header << QString::fromUtf8(u8"文献题名");
-    m_table_header << QString::fromUtf8(u8"文献出处");
-    m_table_header << QString::fromUtf8(u8"文献类型");
-    m_table_header << QString::fromUtf8(u8"母体出处");
-    m_table_header << QString::fromUtf8(u8"母体出版_年");
-    m_table_header << QString::fromUtf8(u8"母体出版_卷");
-    m_table_header << QString::fromUtf8(u8"母体出版_期");
-    m_table_header << QString::fromUtf8(u8"母体出版_页");
-    m_table_header << QString::fromUtf8(u8"版次说明");
-    m_table_header << QString::fromUtf8(u8"母体出版地");
-    m_table_header << QString::fromUtf8(u8"母体出版社");
-    m_table_header << QString::fromUtf8(u8"会议地点");
-    m_table_header << QString::fromUtf8(u8"主编");
-    m_table_header << QString::fromUtf8(u8"学位论文授予单位");
-    m_table_header << QString::fromUtf8(u8"待发表");
-    m_table_header << QString::fromUtf8(u8"责任方式");
-    m_table_header << QString::fromUtf8(u8"语种");
-    m_table_header << QString::fromUtf8(u8"电子版");
-    m_table_header << QString::fromUtf8(u8"其它");
-    m_table_header << QString::fromUtf8(u8"不做");
-    m_table_header << QString::fromUtf8(u8"不会");
-    m_table_header << QString::fromUtf8(u8"语言转换");
-    m_table_header << QString::fromUtf8(u8"英文信息");
-    m_table_header << QString::fromUtf8(u8"标记人员");
-    m_table_header << QString::fromUtf8(u8"备注");
-    m_table_header << QString::fromUtf8(u8"算法点数");
-    m_table_header << QString::fromUtf8(u8"人工点数");
-    m_table_header << QString::fromUtf8(u8"人工增加");
-    m_table_header << QString::fromUtf8(u8"人工修改");
-    m_table_header << QString::fromUtf8(u8"人工删除");
-    m_table_header << QString::fromUtf8(u8"工作路径");
+    m_table_header << MyGlobal::TASK_CODE;
+    m_table_header << MyGlobal::POST_NAME;
+    m_table_header << MyGlobal::TASK_CHARACTERISTICS;
+    m_table_header << MyGlobal::ARTICLE_CODE;
+    m_table_header << MyGlobal::CIATION_CODE;
+    m_table_header << MyGlobal::ARRIVE_TIME;
+    m_table_header << MyGlobal::START_TIME;
+    m_table_header << MyGlobal::CHECK_BATCH;
+    m_table_header << MyGlobal::CIATION_INDEXICAL;
+    m_table_header << MyGlobal::INDEXING_TOTAL_NUMBER;
+    m_table_header << MyGlobal::AUTHOR_NAME;
+    m_table_header << MyGlobal::ARTICLE_TITLE;
+    m_table_header << MyGlobal::ARTICLE_SOURCES;
+    m_table_header << MyGlobal::ARTICLE_TYPE;
+    m_table_header << MyGlobal::MOTHER_SOURCES;
+    m_table_header << MyGlobal::MOTHER_YEAR;
+    m_table_header << MyGlobal::MOTHER_VOLUME;
+    m_table_header << MyGlobal::MOTHER_PHASE;
+    m_table_header << MyGlobal::MOTHER_PAGE;
+    m_table_header << MyGlobal::EDITION_DESCRIPTION;
+    m_table_header << MyGlobal::MOTHER_LOCATION;
+    m_table_header << MyGlobal::MOTHER_PRESS;
+    m_table_header << MyGlobal::MEETING_LOCATION;
+    m_table_header << MyGlobal::CHIEF_EDITOR;
+    m_table_header << MyGlobal::CONFER_UNIT;
+    m_table_header << MyGlobal::PUBLISH_STATE;
+    m_table_header << MyGlobal::RESPONSIBILITY_TYPE;
+    m_table_header << MyGlobal::LANGUAGE;
+    m_table_header << MyGlobal::ELECTRONIC_EDITION;
+    m_table_header << MyGlobal::OTHER;
+    m_table_header << MyGlobal::DO_NOT;
+    m_table_header << MyGlobal::CAN_NOT;
+    m_table_header << MyGlobal::LANGUAGE_TRANS;
+    m_table_header << MyGlobal::ENGLISH_INFO;
+    m_table_header << MyGlobal::INDEXING_STAFF;
+    m_table_header << MyGlobal::OTHER_INFO;
+    m_table_header << MyGlobal::ALGORITHM_POINT;
+    m_table_header << MyGlobal::HUMAN_POINT;
+    m_table_header << MyGlobal::HUMAN_ADD;
+    m_table_header << MyGlobal::HUMAN_MODIFY;
+    m_table_header << MyGlobal::HUMAN_DELETE;
+    m_table_header << MyGlobal::WORK_PATH;
     m_col = m_table_header.size();
 }
 
@@ -77,7 +78,7 @@ QVariant MyDataModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
     if (role == Qt::TextAlignmentRole) {
-        return int(Qt::AlignCenter | Qt::AlignVCenter);
+        return int(Qt::AlignLeft | Qt::AlignVCenter);
     }
     if (role == Qt::DisplayRole) {
         return m_data.at(index.row()).at(index.column());

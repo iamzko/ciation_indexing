@@ -2,6 +2,7 @@
 #define MYDATATABLE_H
 
 #include "mydatamodel.h"
+#include "myglobal.h"
 #include <QTableView>
 #include <QWidget>
 
@@ -23,7 +24,7 @@ private slots:
 
 signals:
     void current_clicked_index(QString origin_ciation);
-    void current_double_clicked_index(QString origin_ciation);
+    void current_double_clicked_index(task_part_info task_info);
 
 private:
     QTableView* m_data_view;

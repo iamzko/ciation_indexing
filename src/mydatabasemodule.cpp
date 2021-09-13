@@ -68,6 +68,11 @@ bool MyDataBaseModule::out_db_open(QString out_db_path)
     return open_db(out_db_path, m_task_out_db, DB_NAME_OUT);
 }
 
+bool MyDataBaseModule::out_db_is_open()
+{
+    return is_db_open(m_task_out_db);
+}
+
 bool MyDataBaseModule::out_db_table_detail_read(QMap<QString, QMap<QString, QVariant>>& table_content)
 {
     return read_out_table(table_content, DB_TABLE_NAME_DETAIL);
@@ -185,6 +190,17 @@ bool MyDataBaseModule::system_info_db_literature_table_read(QMap<QString, QMap<Q
 void MyDataBaseModule::system_info_db_close()
 {
     close_db(m_system_info_db);
+}
+
+QMap<QString, QVariant> MyDataBaseModule::out_db_one_empty_line_create()
+{
+    QMap<QString, QVariant> result;
+    auto field_names = get_table_header_list(m_task_out_db, DB_TABLE_NAME_RESULT);
+    foreach (auto& name, field_names) {
+        QVariant temp;
+        result.insert(name, temp);
+    }
+    return result;
 }
 
 void MyDataBaseModule::input_db_close()

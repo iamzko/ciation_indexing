@@ -40,7 +40,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="action_finish_local"/>
+   <addaction name="action_submit"/>
    <addaction name="action_indexing"/>
    <addaction name="action_check_local"/>
    <addaction name="action_check_local_with_update"/>
@@ -103,7 +103,7 @@
     <bool>true</bool>
    </attribute>
   </widget>
-  <action name="action_finish_local">
+  <action name="action_submit">
    <property name="text">
     <string>提交</string>
    </property>
@@ -245,6 +245,9 @@
    </property>
    <property name="toolTip">
     <string>显示引文标记视图</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Z</string>
    </property>
   </action>
  </widget>

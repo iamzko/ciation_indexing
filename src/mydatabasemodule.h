@@ -21,6 +21,7 @@ public:
     bool input_db_table_ciation_read(QMap<QString, QMap<QString, QVariant>>& table_content);
     void input_db_close();
     bool out_db_open(QString out_db_path);
+    bool out_db_is_open();
     bool out_db_table_detail_read(QMap<QString, QMap<QString, QVariant>>& table_content);
     bool out_db_table_detail_write(const QMap<QString, QMap<QString, QVariant>>& table_content);
     bool out_db_table_result_read(QMap<QString, QMap<QString, QVariant>>& table_content);
@@ -34,6 +35,7 @@ public:
     bool system_info_db_publish_table_read(QMap<QString, QMap<QString, QVariant>>& table_content);
     bool system_info_db_literature_table_read(QMap<QString, QMap<QString, QVariant>>& table_content);
     void system_info_db_close();
+    QMap<QString, QVariant> out_db_one_empty_line_create();
 
     const QString& error() const;
 

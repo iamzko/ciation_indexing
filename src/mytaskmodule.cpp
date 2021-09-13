@@ -1,7 +1,10 @@
 ﻿#include "mytaskmodule.h"
+#include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QScopedPointer>
+#include <QSettings>
 #include <QVariant>
 #include <QtDebug>
 
@@ -222,7 +225,6 @@ int MyTaskModule::load_single_task(int& key, QMap<QString, QString>& task_conten
             error = json_err.errorString();
         }
         //        qDebug() << task_content;
-
     } break;
     }
     return ret;
@@ -230,12 +232,26 @@ int MyTaskModule::load_single_task(int& key, QMap<QString, QString>& task_conten
 
 int MyTaskModule::load_all_task(QMap<QString, QMap<QString, QString>>& task_content, QString& error)
 {
-    char all_task_json[TASK_BUFF_SIZE] = { 0 };
-    char err_msg[TASK_ERROR_SIZE] = { 0 };
-    int ret = GetAllTaskJsonWrapExA(all_task_json, err_msg);
+    QSettings setting("HKEY_CURRENT_USER\\Software\\CNKI\\Assistant\\Work", QSettings::NativeFormat);
+    auto ini_path = setting.value("QueuePath", "").toString();
+    QFile f(ini_path);
+    auto file_size = f.size();
+    if (file_size <= 0) {
+        error = QString::fromUtf8(u8"[%1]队列文件异常！");
+        return -1;
+    }
+
+    //    char all_task_json[TASK_BUFF_SIZE] = { 0 };
+    //    char err_msg[TASK_ERROR_SIZE] = { 0 };
+    auto all_task_json = new QScopedPointer<char>(new char[file_size]);
+    memset(all_task_json->get(), 0, file_size);
+    auto err_msg = new QScopedPointer<char>(new char[TASK_ERROR_SIZE]);
+    memset(err_msg->get(), 0, TASK_ERROR_SIZE);
+
+    int ret = GetAllTaskJsonWrapExA(all_task_json->get(), err_msg->get());
     switch (ret) {
     case -1:
-        error = QString::fromLocal8Bit(err_msg);
+        error = QString::fromLocal8Bit(err_msg->get());
         break;
     case 0:
         error = QString::fromUtf8(u8"无任务");
@@ -244,7 +260,7 @@ int MyTaskModule::load_all_task(QMap<QString, QMap<QString, QString>>& task_cont
         //        qDebug() << QString::fromLocal8Bit(all_task_json);
         QJsonDocument json_doc;
         QJsonParseError json_err;
-        json_doc = json_doc.fromJson(QString::fromLocal8Bit(all_task_json).toUtf8(), &json_err);
+        json_doc = json_doc.fromJson(QString::fromLocal8Bit(all_task_json->get()).toUtf8(), &json_err);
         if (json_err.error == QJsonParseError::NoError) {
             if (json_doc.isArray()) {
                 //                qDebug() << "array";

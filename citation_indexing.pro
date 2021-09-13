@@ -11,28 +11,39 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 SOURCES += \
     ./src/main.cpp \
     ./src/indexmainwindow.cpp \
+    src/myciationeditor.cpp \
     src/mydatabasemodule.cpp \
     src/mydatamodel.cpp \
     src/mydatatable.cpp \
     src/myeditor.cpp \
+    src/myfontsettingdialog.cpp \
+    src/myglobal.cpp \
     src/mygraphicseditor.cpp \
+    src/myhighlighter.cpp \
     src/mytaskmodule.cpp \
-    src/mytexteditor.cpp
+    src/mytexteditor.cpp \
+    src/mytextobjectinterface.cpp
 
 HEADERS += \
     ./src/indexmainwindow.h \
+    src/myciationeditor.h \
     src/mydatabasemodule.h \
     src/mydatamodel.h \
     src/mydatatable.h \
     src/myeditor.h \
+    src/myfontsettingdialog.h \
+    src/myglobal.h \
     src/mygraphicseditor.h \
+    src/myhighlighter.h \
     src/mytaskmodule.h \
     src/mytexteditor.h\
-    src/TaskAidWrap.h
+    src/TaskAidWrap.h \
+    src/mytextobjectinterface.h
 
 
 FORMS += \
-    ./ui/indexmainwindow.ui
+    ./ui/indexmainwindow.ui \
+    src/myfontsettingdialog.ui
 
 TRANSLATIONS += \
     ./translations/citation_indexing_zh_CN.ts

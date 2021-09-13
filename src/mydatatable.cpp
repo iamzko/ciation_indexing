@@ -16,10 +16,12 @@ MyDataTable::MyDataTable(QWidget *parent) : QWidget(parent)
     //        m_data_model->setData(m_data_model->index(i, 0), QString("%1").arg(i), Qt::DisplayRole);
     //    }
     auto header_view = m_data_view->horizontalHeader();
-    header_view->setSectionsMovable(true);
+    //    header_view->setSectionsMovable(true);
     header_view->setSectionsClickable(true);
     header_view->setStretchLastSection(true);
     m_data_view->setSortingEnabled(true);
+    m_data_view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_data_view->setSelectionMode(QAbstractItemView::SingleSelection);
     init_signals_and_slots();
 }
 
@@ -63,7 +65,7 @@ QStringList MyDataTable::get_table_headers()
 void MyDataTable::set_one_line_data(int line, const QMap<QString, QVariant>& line_data)
 {
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::TASK_CODE)), line_data.value(QString::fromUtf8(u8"编号")), Qt::DisplayRole);
-    m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::POST_NAME)), line_data.value(QString::fromUtf8(u8""))); //岗位名称
+    m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::POST_NAME)), line_data.value(QString::fromUtf8(u8"岗位名称"))); //岗位名称
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::TASK_CHARACTERISTICS)), line_data.value(QString::fromUtf8(u8"任务性质")), Qt::DisplayRole);
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::ARTICLE_CODE)), line_data.value(QString::fromUtf8(u8"文章编号")), Qt::DisplayRole);
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::CIATION_CODE)), line_data.value(QString::fromUtf8(u8"引文编号")), Qt::DisplayRole);
@@ -88,7 +90,7 @@ void MyDataTable::set_one_line_data(int line, const QMap<QString, QVariant>& lin
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::CHIEF_EDITOR)), line_data.value(QString::fromUtf8(u8"主编")), Qt::DisplayRole);
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::CONFER_UNIT)), line_data.value(QString::fromUtf8(u8"学位论文授予单位")), Qt::DisplayRole);
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::PUBLISH_STATE)), line_data.value(QString::fromUtf8(u8"待发表")), Qt::DisplayRole);
-    m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::RESPONSIBILITY_TYPE)), line_data.value(QString::fromUtf8(u8"")), Qt::DisplayRole); //责任方式
+    m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::RESPONSIBILITY_TYPE)), line_data.value(QString::fromUtf8(u8"责任方式")), Qt::DisplayRole); //责任方式
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::LANGUAGE)), line_data.value(QString::fromUtf8(u8"语种")), Qt::DisplayRole);
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::ELECTRONIC_EDITION)), line_data.value(QString::fromUtf8(u8"电子版")), Qt::DisplayRole);
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::OTHER)), line_data.value(QString::fromUtf8(u8"其它")), Qt::DisplayRole);
@@ -103,7 +105,7 @@ void MyDataTable::set_one_line_data(int line, const QMap<QString, QVariant>& lin
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::HUMAN_ADD)), line_data.value(QString::fromUtf8(u8"增加点数")), Qt::DisplayRole);
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::HUMAN_MODIFY)), line_data.value(QString::fromUtf8(u8"修改点数")), Qt::DisplayRole);
     m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::HUMAN_DELETE)), line_data.value(QString::fromUtf8(u8"删除点数")), Qt::DisplayRole);
-    m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::WORK_PATH)), line_data.value(QString::fromUtf8(u8"")), Qt::DisplayRole); //db路径
+    m_data_model->setData(m_data_model->index(line, static_cast<int>(MyDataModel::COL_NAME::WORK_PATH)), line_data.value(QString::fromUtf8(u8"工作路径")), Qt::DisplayRole); //db路径
 }
 
 void MyDataTable::init_signals_and_slots()
@@ -114,7 +116,6 @@ void MyDataTable::init_signals_and_slots()
 
 void MyDataTable::on_tableview_clicked(const QModelIndex& index)
 {
-    qDebug() << "cilcked";
     //    qDebug() << m_data_model->data(m_data_model->index(index.row(), static_cast<int>(MyDataModel::COL_NAME::CIATION_INDEXICAL))).toString();
     auto ciation_content = (m_data_model->data(m_data_model->index(index.row(), static_cast<int>(MyDataModel::COL_NAME::CIATION_INDEXICAL))).toString());
     emit current_clicked_index(ciation_content);
@@ -122,6 +123,10 @@ void MyDataTable::on_tableview_clicked(const QModelIndex& index)
 
 void MyDataTable::on_tableview_double_clicked(const QModelIndex& index)
 {
-    qDebug() << "double cilcked";
-    emit current_double_clicked_index(m_data_model->data(m_data_model->index(index.row(), static_cast<int>(MyDataModel::COL_NAME::CIATION_INDEXICAL))).toString());
+    task_part_info temp;
+    temp.task_code = m_data_model->data(m_data_model->index(index.row(), static_cast<int>(MyDataModel::COL_NAME::TASK_CODE))).toString();
+    temp.article_code = m_data_model->data(m_data_model->index(index.row(), static_cast<int>(MyDataModel::COL_NAME::ARTICLE_CODE))).toString();
+    temp.ciation_code = m_data_model->data(m_data_model->index(index.row(), static_cast<int>(MyDataModel::COL_NAME::CIATION_CODE))).toString();
+    temp.task_come_time = m_data_model->data(m_data_model->index(index.row(), static_cast<int>(MyDataModel::COL_NAME::START_TIME))).toString();
+    emit current_double_clicked_index(temp);
 }

@@ -48,20 +48,33 @@ private slots:
 
     void on_action_get_new_task_triggered();
 
-    void on_action_finish_local_triggered();
+    //单击编辑区引文时刷新下方文本框内容
     void update_bottom_edit_readonly(QString code);
+    //单击表格区内容时刷新下方文本框内容
     void update_bottom_edit_writable(QString origin_ciation);
+    //双击表格区内容时刷新编辑区引文内容
+    void updata_ciation_editor_content(task_part_info task_info);
 
     void on_action_auto_indexing_triggered();
+    void on_choose_one_line(QString ciation_code);
+
+    void on_action_submit_triggered();
+
+    void on_action_set_font_triggered();
 
 private:
     bool eventFilter(QObject* target, QEvent* e) override;
     void init_user_interface();
     void init_signals_and_slots();
+    void switch_signals_and_slots();
     void show_message(const QString& msg);
     void update_window_title(const QString& code);
     void update_task_label();
     QString get_cur_input_db_path();
+    QString get_cur_output_db_path();
+    QMap<QString, QVariant> get_one_ciation_split_result(QString ciation_code, QString ciation_content);
+signals:
+    void choose_one_line(QString ciation_code);
 
 private:
     Ui::IndexMainWindow *ui;
